@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronRight, Bot, Folder, Info } from "lucide-react";
 import type { SectionNode, AgentDoc } from "@/lib/obsidian";
@@ -10,11 +10,6 @@ import { iconForDept } from "@/components/DeptIcon";
 import { cn, paletteFor } from "@/lib/utils";
 
 type SelectHandler = (doc: AgentDoc, sectionName: string, colorIndex: number) => void;
-
-export interface ExpandSignal {
-  action: "expand" | "collapse";
-  token: number;
-}
 
 function AgentRow({
   doc,
@@ -56,23 +51,16 @@ function NestedGroup({
   colorIndex,
   depth,
   onSelectAgent,
-  expandSignal,
 }: {
   node: SectionNode;
   sectionName: string;
   colorIndex: number;
   depth: number;
   onSelectAgent: SelectHandler;
-  expandSignal?: ExpandSignal | null;
 }) {
   const [open, setOpen] = useState(false);
   const total = countAgents(node);
   const palette = paletteFor(colorIndex);
-
-  useEffect(() => {
-    if (!expandSignal) return;
-    setOpen(expandSignal.action === "expand");
-  }, [expandSignal]);
 
   return (
     <div className="border-l border-gray-200 dark:border-gray-800" style={{ marginLeft: depth * 10 }}>
@@ -125,7 +113,6 @@ function NestedGroup({
                   colorIndex={colorIndex}
                   depth={depth + 1}
                   onSelectAgent={onSelectAgent}
-                  expandSignal={expandSignal}
                 />
               ))}
             </div>
@@ -141,27 +128,12 @@ interface Props {
   colorIndex: number;
   onSelectAgent: SelectHandler;
   index: number;
-  defaultOpen?: boolean;
-  expandSignal?: ExpandSignal | null;
 }
 
-export default function SectionCard({
-  section,
-  colorIndex,
-  onSelectAgent,
-  index,
-  defaultOpen = false,
-  expandSignal,
-}: Props) {
-  const [open, setOpen] = useState(defaultOpen);
+export default function SectionCard({ section, colorIndex, onSelectAgent, index }: Props) {
   const palette = paletteFor(colorIndex);
   const total = countAgents(section);
   const Icon = iconForDept(section.id);
-
-  useEffect(() => {
-    if (!expandSignal) return;
-    setOpen(expandSignal.action === "expand");
-  }, [expandSignal]);
 
   return (
     <motion.div
@@ -169,18 +141,12 @@ export default function SectionCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: index * 0.03 }}
       className={cn(
-        "rounded-2xl border bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden",
+        "h-full flex flex-col rounded-2xl border bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden",
         palette.border
       )}
     >
       <div className="w-full flex items-center justify-between gap-3 px-5 py-4">
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setOpen((o) => !o);
-          }}
-          className="min-w-0 flex-1 flex items-center gap-3 text-left cursor-pointer"
-        >
+        <div className="min-w-0 flex-1 flex items-center gap-3">
           <span className={cn("flex items-center justify-center w-9 h-9 rounded-lg shrink-0", palette.bg)}>
             <Icon className={cn("w-[18px] h-[18px]", palette.text)} />
           </span>
@@ -193,80 +159,50 @@ export default function SectionCard({
             </h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{total} sub-agent</p>
           </span>
-        </button>
-        <div className="flex items-center gap-1 shrink-0">
-          {section.index && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onSelectAgent(section.index!, deptTitle(section), colorIndex);
-              }}
-              title="Bo'lim haqida batafsil"
-              className={cn(
-                "p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors",
-                palette.text
-              )}
-            >
-              <Info className="w-4 h-4" />
-            </button>
-          )}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpen((o) => !o);
-            }}
-            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            <ChevronDown
-              className={cn(
-                "w-5 h-5 shrink-0 text-gray-400 dark:text-gray-500 transition-transform duration-300",
-                open && "rotate-180"
-              )}
-            />
-          </button>
         </div>
+        {section.index && (
+          <button
+            onClick={() => onSelectAgent(section.index!, deptTitle(section), colorIndex)}
+            title="Bo'lim haqida batafsil"
+            className={cn(
+              "p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors shrink-0",
+              palette.text
+            )}
+          >
+            <Info className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="overflow-hidden border-t border-gray-100 dark:border-gray-800"
-          >
-            <div
-              data-lenis-prevent
-              className="px-3 py-2 divide-y divide-gray-100 dark:divide-gray-800/60 max-h-[420px] overflow-y-auto no-scrollbar"
-            >
-              {total === 0 && (
-                <p className="px-2 py-3 text-xs text-gray-400 dark:text-gray-500">Sub-agent topilmadi</p>
-              )}
-              {section.docs.map((doc) => (
-                <AgentRow
-                  key={doc.id}
-                  doc={doc}
-                  sectionName={section.displayName}
-                  colorIndex={colorIndex}
-                  onSelectAgent={onSelectAgent}
-                />
-              ))}
-              {section.children.map((child) => (
-                <NestedGroup
-                  key={child.id}
-                  node={child}
-                  sectionName={section.displayName}
-                  colorIndex={colorIndex}
-                  depth={1}
-                  onSelectAgent={onSelectAgent}
-                  expandSignal={expandSignal}
-                />
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className="border-t border-gray-100 dark:border-gray-800">
+        <div
+          data-lenis-prevent
+          className="px-3 py-2 divide-y divide-gray-100 dark:divide-gray-800/60 max-h-[420px] overflow-y-auto no-scrollbar"
+        >
+          {total === 0 && (
+            <p className="px-2 py-3 text-xs text-gray-400 dark:text-gray-500">Sub-agent topilmadi</p>
+          )}
+          {section.docs.map((doc) => (
+            <AgentRow
+              key={doc.id}
+              doc={doc}
+              sectionName={section.displayName}
+              colorIndex={colorIndex}
+              onSelectAgent={onSelectAgent}
+            />
+          ))}
+          {section.children.map((child) => (
+            <NestedGroup
+              key={child.id}
+              node={child}
+              sectionName={section.displayName}
+              colorIndex={colorIndex}
+              depth={1}
+              onSelectAgent={onSelectAgent}
+            />
+          ))}
+        </div>
+      </div>
     </motion.div>
   );
 }

@@ -2,18 +2,17 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Crown, Sparkles, Bot, ChevronsDown, ChevronsUp } from "lucide-react";
+import { Crown, Sparkles, Bot } from "lucide-react";
 import type { DashboardData, AgentDoc } from "@/lib/obsidian";
 import {
   flattenAgents,
-  countAgents,
   allDocsFlat,
   buildDocIndex,
   buildDocMetaIndex,
 } from "@/lib/tree";
 import { deptLeader, stripLeadingEmoji } from "@/lib/deptMeta";
 import { paletteFor, cn } from "@/lib/utils";
-import SectionCard, { type ExpandSignal } from "@/components/SectionCard";
+import SectionCard from "@/components/SectionCard";
 import AgentModal from "@/components/AgentModal";
 
 interface Selected {
@@ -24,7 +23,6 @@ interface Selected {
 
 export default function Dashboard({ data }: { data: DashboardData }) {
   const [selected, setSelected] = useState<Selected | null>(null);
-  const [expandSignal, setExpandSignal] = useState<ExpandSignal | null>(null);
 
   const leadershipAgents = useMemo(
     () => (data.leadership ? flattenAgents(data.leadership) : []),
@@ -61,14 +59,6 @@ export default function Dashboard({ data }: { data: DashboardData }) {
   const uniqueLeaders = Array.from(
     new Map(heads.map((h) => [h.leader, h])).values()
   );
-
-  const largestSectionId = heads.reduce(
-    (best, h) => {
-      const total = countAgents(h.section);
-      return total > best.total ? { id: h.section.id, total } : best;
-    },
-    { id: "", total: -1 }
-  ).id;
 
   const colorIndexById = new Map(heads.map((h) => [h.section.id, h.colorIndex]));
 
@@ -163,31 +153,13 @@ export default function Dashboard({ data }: { data: DashboardData }) {
         </header>
 
         <main>
-          <div className="flex items-center justify-end gap-2 mb-3">
-            <button
-              onClick={() => setExpandSignal({ action: "expand", token: Date.now() })}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-            >
-              <ChevronsDown className="w-3.5 h-3.5" />
-              Barchasini yoyish
-            </button>
-            <button
-              onClick={() => setExpandSignal({ action: "collapse", token: Date.now() })}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-            >
-              <ChevronsUp className="w-3.5 h-3.5" />
-              Barchasini yig'ish
-            </button>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-start">
             {heads.map(({ section, colorIndex }, i) => (
               <SectionCard
                 key={section.id}
                 section={section}
                 colorIndex={colorIndex}
                 index={i}
-                defaultOpen={section.id === largestSectionId}
-                expandSignal={expandSignal}
                 onSelectAgent={(doc, sectionName, ci) =>
                   setSelected({ doc, sectionName, colorIndex: ci })
                 }
