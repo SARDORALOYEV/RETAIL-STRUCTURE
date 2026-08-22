@@ -2,9 +2,11 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
+// Bundled into the repo (see /STRUCTURE) so it resolves the same way on
+// Vercel's serverless functions as it does locally. Override only for local
+// development against a live Obsidian vault outside the repo.
 export const VAULT_PATH =
-  process.env.OBSIDIAN_VAULT_PATH ||
-  "C:\\Users\\Meta\\Documents\\Obsidian Vault\\Retail IT DEPARTMENT\\Organizations\\STRUCTURE";
+  process.env.OBSIDIAN_VAULT_PATH || path.join(process.cwd(), "STRUCTURE");
 
 export interface AgentDoc {
   id: string;
