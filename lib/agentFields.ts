@@ -58,7 +58,9 @@ export interface AgentFields {
   kompaniyadagiOrni: string[];
   erpInputs: string[];
   erpOutputs: string[];
+  erpTable: string | null;
   workflow: WorkflowEdge[];
+  workflowText: string | null;
   cascade: CascadeInfo | null;
   tizim: string;
   telegramBot: string | null;
@@ -75,7 +77,11 @@ export function deriveAgentFields(doc: AgentDoc): AgentFields {
 
   const linksBody =
     section(doc.content, /##\s*[^\n]*Bog'liqliklar[^\n]*/i) ||
-    section(doc.content, /##\s*[^\n]*Keyinchalik[^\n]*/i);
+    section(doc.content, /##\s*[^\n]*Keyinchalik[^\n]*/i) ||
+    section(doc.content, /##\s*[^\n]*Bog['’]?liq Agentlar[^\n]*/i);
+
+  const workflowText = section(doc.content, /##\s*[^\n]*Tizim Zanjiri[^\n]*/i);
+  const erpTable = section(doc.content, /##\s*[^\n]*ERP va Ma'lumotlar Almashinuvi[^\n]*/i);
 
   const linkSet = new Set<string>();
   if (linksBody) {
@@ -126,7 +132,9 @@ export function deriveAgentFields(doc: AgentDoc): AgentFields {
     kompaniyadagiOrni: Array.from(linkSet),
     erpInputs,
     erpOutputs,
+    erpTable,
     workflow: parseWorkflowEdges(doc.content),
+    workflowText,
     cascade,
     tizim: asString(fm.tags) || NA,
     telegramBot: doc.telegramBot,

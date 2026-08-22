@@ -1,71 +1,44 @@
 ---
-aliases: [Sifat_Nazorati_Agent, Quality_Control_Agent, Sifat]
-tags: [retail-it, sifat, erp, agent]
+aliases: [Sifat_Nazorati_Agent, Quality_Inspector_Agent]
+tags: [retail-it, production, sifat, agent, makkajoxori]
 created: 2026-08-22
 status: active
-role: Sifat va brak nazorati — laboratoriya, brak akti, sifat standartlari
-inputs_from:
-  - [[Ishlab_Chiqarish_Agent]]
-  - [[Sklad_Agent]]
-outputs_to:
-  - [[Ishlab_Chiqarish_Agent]]
-  - [[Buxgalteriya_Agent]]
-  - [[COO_Agent]]
-  - [[CEO_Agent]]
-cascade_rules:
-  trigger: Brak 5% dan oshishi yoki sifat standartdan tashqari
-  action:
-    - Brak 5% dan oshsa → [[Ishlab_Chiqarish_Agent]] ga to'xtatish buyrug'i
-    - Sifat 3 marta standartdan tashqari → [[CEO_Agent]] ga hisobot
-    - Yangi sifat standarti → [[COO_Agent]] ga tasdiqlash
-  escalate_to: [[COO_Agent]]
-parent: [[Sardor_General_Overview]]
+role: Har smenadagi mahsulot sifatini tekshiruvchi va brak foizini hisoblovchi agent
+parent: [[Sifat_Brak_Nazorati]]
 ---
 
-# 🔬 Sifat Nazorati Agent
+# 🧪 Sifat Nazorati Agent
 
-## ERP输入 (inputs_from)
+## 📋 Vazifasi
 
-| Manba | Ma'lumot turi | chastotasi |
-|-------|---------------|------------|
-| [[Ishlab_Chiqarish_Agent]] | Ishlab chiqarilgan mahsulot namunalari | Har smena |
-| [[Sklad_Agent]] | Ombordagi mahsulot sifati | Haftalik |
+- Har partiyadan tasodifiy namuna olib, laboratoriya tahlilidan (namlik, yog' foizi, ta'm) o'tkazish
+- Mahsulot rangi va shaklini standart namuna bilan vizual solishtirish
+- Qadoq og'irligini (masalan 70g ± 2g) tarozida tekshirish
+- Har smena uchun brak foizini avtomatik hisoblab, kunlik/haftalik trend grafigini yuritish
+- Brak me'yordan (5%) oshgan smenalar bo'yicha darhol ogohlantirish yuborish
+- Yaroqlilik muddati tugagan yoki tugashiga oz qolgan mahsulotni omborda aniqlash
 
-## ERP输出 (outputs_to)
+## 🔄 Tizim Zanjiri (Workflow)
 
-| Qabul qiluvchi | Ma'lumot turi | chastotasi |
-|----------------|---------------|------------|
-| [[Ishlab_Chiqarish_Agent]] | Sifat natijalari, ogohlantirishlar | Har smena |
-| [[Buxgalteriya_Agent]] | Brak hisoboti, yo'qotishlar | Oylik |
-| [[COO_Agent]] | Sifat hisoboti | Haftalik |
-| [[CEO_Agent]] | Strategik sifat hisoboti | Oylik |
+1. [[Sifat_Brak_Nazorati]] jarayoni doirasida har partiyadan namuna oladi.
+2. Namlik, yog' foizi, ta'm va og'irlik ko'rsatkichlari standart bilan solishtiriladi.
+3. Standartga mos kelmagan birliklar brak sifatida ro'yxatga olinadi va sababi (masalan "kuydirilgan", "ziravor kam") belgilanadi.
+4. Smena bo'yicha brak foizi hisoblanadi va 5% chegara bilan solishtiriladi.
+5. Chegaradan oshsa [[Ekstruziya_Liniya]] yoki [[Qadoqlash_Markirovka]] ga darhol xabar yuboriladi.
+6. Kunlik sifat hisoboti [[Ishlab_Chiqarish_Agent]] ga taqdim etiladi.
 
-## Cascade Rules (Zanjirli Bog'liqliklar)
+## 📊 ERP va Ma'lumotlar Almashinuvi
 
-```mermaid
-flowchart TD
-    BRAK[Brak 5% dan oshsa] -->|trigger| PROD[Ishlab Chiqarish Agent]
-    PROD -->|to'xtatish buyrug'i| SIFAT
-    SIFAT_3[Sifat 3 marta standartdan tashqari] -->|trigger| CEO[CEO Agent]
-    YANGI[Yangi sifat standarti] -->|trigger| COO[COO Agent]
-    SIFAT[Sifat Nazorati] -->|sifat natijalari| PROD
-    SIFAT -->|brak hisoboti| BUX[Buxgalteriya Agent]
-    SIFAT -->|hisobot| COO
-```
+| Kiruvchi ma'lumot | Manba | Chiquvchi ma'lumot | Qabul qiluvchi |
+|---|---|---|---|
+| Partiya namunasi (tasodifiy 50 dona) | [[Sifat_Brak_Nazorati]] | Brak foizi hisoboti: 2.1% (norma ichida) | [[Ishlab_Chiqarish_Agent]] |
+| Standart ko'rsatkichlar (namlik, og'irlik) | Ichki standart baza | Chegaradan oshish alerti | [[Ekstruziya_Liniya]] / [[Qadoqlash_Markirovka]] |
+| — | — | Haftalik sifat trendi | [[Analitika_Agent]] |
 
-| holat | Harakat | Mas'ul |
-|-------|---------|--------|
-| Brak > 5% | [[Ishlab_Chiqarish_Agent]] ga to'xtatish buyrug'i | Sifat |
-| Sifat 3 marta past | [[CEO_Agent]] ga strategik hisobot | Sifat |
-| Yangi sifat standarti | [[COO_Agent]] ga tasdiqlash | Sifat |
-| Audit | [[Yuridik_Agent]] bilan hamkorlik | Sifat |
+## 🔗 Bog'liq Agentlar
 
-## Keyinchalik Bog'liqlar
-
-- [[Sardor_General_Overview]] — umumiy dashboard
-- [[Ishlab_Chiqarish_Agent]] — mahsulot manbai
-- [[Sklad_Agent]] — ombor mahsuloti
-- [[Buxgalteriya_Agent]] — brak hisoboti
-- [[COO_Agent]] — operatsion boshqaruv
-- [[CEO_Agent]] — strategik hisobot
-- [[Yuridik_Agent]] — sifat standartlari
+- [[Sifat_Brak_Nazorati]] — bosh jarayon
+- [[Ishlab_Chiqarish_Agent]] — umumiy nazorat
+- [[Ishlab_Chiqarish_Departamenti]] — umumiy dashboard
+- [[Ekstruziya_Liniya]] — brak sababi manbai
+- [[Qadoqlash_Markirovka]] — brak sababi manbai

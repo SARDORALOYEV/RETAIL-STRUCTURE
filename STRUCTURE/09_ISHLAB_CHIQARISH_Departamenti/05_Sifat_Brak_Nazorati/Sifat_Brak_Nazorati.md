@@ -1,66 +1,43 @@
 ---
-aliases: [Sifat_Brak_Nazorati, Brak_Agenti, Sifat_Nazorati]
-tags: [retail-it, production, sifat, brak]
+aliases: [Sifat_Brak_Nazorati, Quality_Control]
+tags: [retail-it, production, sifat, brak, makkajoxori]
 created: 2026-08-22
 status: active
-parent: [[Sardor_General_Overview]]
+parent: [[Ishlab_Chiqarish_Agent]]
 ---
 
-# 🔬 Sifat va Brak Nazorati
+# 🔍 Sifat va Brak Nazorati
 
-## Input Manbalari
+## 📋 Vazifasi
 
-| Manba | Ma'lumot turi |
-|-------|---------------|
-| [[Ekstruziya_Liniya]] | Ishlab chiqarilgan mahsulot namunalari |
-| [[Qadoqlash_Markirovka]] | Qadoqlangan mahsulotlar |
+- Har partiyadan namuna olib, ta'm, rang, hajm va qadoqlash sifatini standart bilan solishtirish
+- Pishmay qolgan, kuydirilgan yoki ziravori yetarli qo'yilmagan mahsulotni brak sifatida ajratish
+- Har smena bo'yicha brak foizini hisoblash va 5% chegara bilan solishtirish
+- Brak sababini (xom-ashyo, uskuna, retsept xatosi) aniqlab, tegishli liniyaga qaytarish
+- Sifat sertifikati va laboratoriya tahlil natijalarini arxivlash
+- Yaroqlilik muddati va saqlash sharoitlariga rioya etilishini nazorat qilish
 
-## Jarayon
+## 🔄 Tizim Zanjiri (Workflow)
 
-```mermaid
-flowchart LR
-    EL[Ekstruziya Liniya] -->|Namunalar| LAB[Laboratoriya]
-    QM[Qadoqlash] -->|Tayyor mahsulot| LAB
-    LAB -->|Test natijalari| BAHOLASH[Baholash]
-    BAHOLASH -->|Sifatli| YAKUNIY[Tayyor mahsulot]
-    BAHOLASH -->|Brak| BRAK_AKTI[Brak akti]
-    BRAK_AKTI --> ABDULLOH[Abdulloh: Legal]
-    BRAK_AKTI --> CEO_YORDAMCHI[CEO Yordamchisi]
-```
+1. [[Qadoqlash_Markirovka]] dan qadoqlangan partiya namunasi keladi.
+2. [[Sifat_Nazorati_Agent]] ta'm, rang, og'irlik va qadoqlash sifatini tekshiradi.
+3. Standartga mos kelmagan mahsulot brak sifatida ajratiladi, sababi aniqlanadi.
+4. Brak foizi hisoblanadi; 5% dan oshsa tegishli liniyaga (Ekstruziya yoki Qadoqlash) signal yuboriladi.
+5. Tasdiqlangan (sifatli) partiya [[Sklad_Agent]] ga o'tkazishga ruxsat beriladi.
+6. Sifat hisoboti [[Ishlab_Chiqarish_Agent]] va [[Analitika_Agent]] ga yuboriladi.
 
-1. **Laboratoriya testlari**: Namlik, tarkib, rang, ta'm tekshiriladi
-2. **Namlik o'lchash**: Mahsulotning namlik darajasi o'lchanadi
-3. **Brak aniqlash**: Standartga mos kelmaydigan mahsulotlar ajratiladi
-4. **Brak akti**: Brak mahsulotlar uchun rasmiy hujjat tuziladi
+## 📊 ERP va Ma'lumotlar Almashinuvi
 
-## Sifat Standartlari
+| Kiruvchi ma'lumot | Manba | Chiquvchi ma'lumot | Qabul qiluvchi |
+|---|---|---|---|
+| Qadoqlangan partiya namunasi: 36 000 dona | [[Qadoqlash_Markirovka]] | Sifat sertifikati (tasdiqlangan): 35 280 dona | [[Sklad_Agent]] |
+| — | — | Brak akti: 720 dona (2% — kuydirilgan) | [[Ishlab_Chiqarish_Agent]] |
+| — | — | Sifat va brak KPI hisoboti | [[Analitika_Agent]] |
 
-| Ko'rsatkich | Norma | Brak chegarasi |
-|-------------|-------|----------------|
-| Namlik | ≤ 8% | > 10% |
-| Rang | Standart | 30% dan ortiq farq |
-| Ta'm | Standart | Yoqimsiz |
-| Shtrixkod | O'qilishi kerak | O'qilmaydi |
+## 🔗 Bog'liq Agentlar
 
-## Vazifalar
-
-- [ ] Laboratoriya testlarini o'tkazish
-- [ ] Namlik darajasini o'lchash
-- [ ] Brak mahsulotlarni ajratish
-- [ ] Brak aktini rasmiylashtirish
-- [ ] Sifat hisobotini tuzish
-
-## Output
-
-| Qabul qiluvchi | Ma'lumot |
-|----------------|----------|
-| [[Abdulloh_Legal_Buxgalteriya_TIF]] | Brak akti, tannarx tuzatish |
-| [[CEO_Yordamchisi]] | Sifat hisoboti, umumiy holat |
-
-## Keyinchalik Bog'liqlar
-
-- [[Sardor_General_Overview]] — umumiy dashboard
-- [[Ekstruziya_Liniya]] — mahsulot manbai
-- [[Qadoqlash_Markirovka]] — qadoqlangan mahsulot
-- [[Abdulloh_Legal_Buxgalteriya_TIF]] — brak akti va tannarx
-- [[CEO_Yordamchisi]] — sifat hisoboti
+- [[Ishlab_Chiqarish_Agent]] — bosh agent
+- [[Ishlab_Chiqarish_Departamenti]] — umumiy dashboard
+- [[Sifat_Nazorati_Agent]] — tekshiruv agenti
+- [[Qadoqlash_Markirovka]] — namuna manbai
+- [[Sklad_Agent]] — tasdiqlangan mahsulot qabuli

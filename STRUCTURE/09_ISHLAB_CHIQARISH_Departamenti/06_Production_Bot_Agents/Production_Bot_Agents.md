@@ -1,108 +1,44 @@
 ---
-aliases: [Production_Bot_Agents, Zavod_Bot_Agentlari]
-tags: [retail-it, production, bot, agents]
+aliases: [Production_Bot_Agents, Zavod_Bot]
+tags: [retail-it, production, bot, telegram, makkajoxori]
 created: 2026-08-22
 status: active
-parent: [[Sardor_General_Overview]]
+bot_router: "@zavod_production_bot"
+parent: [[Ishlab_Chiqarish_Agent]]
 ---
 
 # 🤖 Production Bot Agents — @zavod_production_bot
 
-`@zavod_production_bot` — ishlab chiqarish jarayonini boshqaruvchi Telegram bot. Ichida **6 ta agent** mavjud:
+`@zavod_production_bot` — zavod ichidagi barcha ishlab chiqarish jarayonlarini boshqaruvchi Telegram bot. Ichida 6 ta yo'nalish mavjud.
 
-## Agentlar Tuzilishi
+## 📋 Vazifasi
 
-```mermaid
-graph TD
-    BOT[🤖 @zavod_production_bot]
-    BOT --> A1[📊 Plan-fakt agenti]
-    BOT --> A2[🌾 Xom-ashyo agenti]
-    BOT --> A3[⚙️ Liniya agenti]
-    BOT --> A4[📦 Qadoqlash agenti]
-    BOT --> A5[🔬 Brak & Sifat agenti]
-    BOT --> A6[💰 Tannarx & Hisobot agenti]
-```
+- Smena boshlanishi va tugashi haqida barcha liniya operatorlariga avtomatik bildirishnoma yuborish
+- Ekstruder va qadoqlash uskunalarining real vaqtdagi holatini (ishlayapti/to'xtagan) ko'rsatish
+- Uskuna nosozligi yuzaga kelganda texnik xizmat jamoasiga darhol signal yuborish
+- Smena boshlig'idan kunlik hajm va brak ma'lumotlarini bot orqali qabul qilish
+- Xom-ashyo qoldig'i kamayganda [[Taminot_Agent]] ga avtomatik so'rov yuborish
+- Kunlik ishlab chiqarish hisobotini rahbariyatga bot orqali yetkazish
 
----
+## 🔄 Tizim Zanjiri (Workflow)
 
-### 1. 📊 Plan-fakt Agenti
+1. Har liniya operatori (Plan-Fakt, Xom-ashyo, Ekstruziya, Qadoqlash, Sifat) smena ma'lumotlarini botga kiritadi.
+2. Bot ma'lumotlarni tegishli agentga (masalan [[Ekstruziya_Liniya]] yoki [[Sifat_Brak_Nazorati]]) uzatadi.
+3. Uskuna to'xtashi aniqlansa, bot texnik xizmat jamoasiga darhol xabar yuboradi.
+4. Smena yakunida bot barcha liniyalardan konsolidatsiyalangan hisobotni [[Ishlab_Chiqarish_Agent]] ga jo'natadi.
 
-| Xususiyat | Tavsif |
-|-----------|--------|
-| vazifa | Kunlik smena rejasi va plan vs fakt taqqoslash |
-| Input | [[Komron_Moliya_Analitika]], [[Abduvoris_Sklad_Marketing]] |
-| Output | Kunlik plan-fakt hisoboti |
+## 📊 ERP va Ma'lumotlar Almashinuvi
 
-- Kunlik ishlab chiqarish rejasini yaratadi
-- Fakt ishlab chiqarish hajmini kuzatadi
-- Plan vs Fakt farqini hisoblaydi
+| Kiruvchi ma'lumot | Manba | Chiquvchi ma'lumot | Qabul qiluvchi |
+|---|---|---|---|
+| Smena hajmi va brak ma'lumotlari | Liniya operatorlari (bot orqali) | Konsolidatsiyalangan smena hisoboti | [[Ishlab_Chiqarish_Agent]] |
+| Uskuna holati (ishlayapti/to'xtagan) | [[Ekstruziya_Liniya]] | Texnik xizmat chaqiruvi | Texnik xizmat jamoasi |
+| Xom-ashyo qoldig'i past | [[Xomashyo_Tayyorlov]] | Shoshilinch xarid so'rovi | [[Taminot_Agent]] |
 
-### 2. 🌾 Xom-ashyo Agenti
+## 🔗 Bog'liq Agentlar
 
-| Xususiyat | Tavsif |
-|-----------|--------|
-| vazifa | Xom-ashyo qabuli, namlik o'lchash, saqlash |
-| Input | [[Kamron_HR_Logistika_Taminot]] |
-| Output | Xom-ashyo qabul hisoboti |
-
-- Xom-ashyo yetkazilishini nazorat qiladi
-- Namlik o'lchash natijalarini yozadi
-- Ombordagi zaxirani hisoblaydi
-
-### 3. ⚙️ Liniya Agenti
-
-| Xususiyat | Tavsif |
-|-----------|--------|
-| vazifa | Ekstruziya liniyasi monitoringi |
-| Input | [[Ekstruziya_Liniya]] sensorlari |
-| Output | Liniya holati hisoboti |
-
-- Stankolar haroratini kuzatadi
-- Pichoq tezligini nazorat qiladi
-- Texnik nosozliklarni aniqlaydi
-
-### 4. 📦 Qadoqlash Agenti
-
-| Xususiyat | Tavsif |
-|-----------|--------|
-| vazifa | Qadoqlash va markirovka jarayoni |
-| Input | [[Qadoqlash_Markirovka]] |
-| Output | Qadoqlash hisoboti |
-
-- Paketlash sonini hisoblaydi
-- Shtrixkod o'qilishini tekshiradi
-- Havo yostig'i ishlatilishini nazorat qiladi
-
-### 5. 🔬 Brak & Sifat Agenti
-
-| Xususiyat | Tavsif |
-|-----------|--------|
-| vazifa | Sifat nazorati va brak aniqlash |
-| Input | [[Sifat_Brak_Nazorati]] |
-| Output | Sifat va brak hisoboti |
-
-- Laboratoriya test natijalarini qayta ishlaydi
-- Brak mahsulotlarni aniqlaydi
-- Brak aktni rasmiylashtiradi
-
-### 6. 💰 Tannarx & Hisobot Agenti
-
-| Xususiyat | Tavsif |
-|-----------|--------|
-| vazifa | Ishlab chiqarish tannarxi va umumiy hisobot |
-| Input | Barcha agentlardan kelgan ma'lumotlar |
-| Output | Tannarx hisoboti, CEO hisoboti |
-
-- Xom-ashyo xarajatlarini hisoblaydi
-- Energiya va ishchi kuchi xarajatlarini qo'shadi
-- Umumiy tannarxni hisoblaydi
-
-## Bog'liqliklar
-
-- [[Sardor_General_Overview]] — umumiy dashboard
-- [[Plan_Fakt]] — plan-fakt agenti jarayoni
-- [[Xomashyo_Tayyorlov]] — xom-ashyo agenti jarayoni
-- [[Ekstruziya_Liniya]] — liniya agenti jarayoni
-- [[Qadoqlash_Markirovka]] — qadoqlash agenti jarayoni
-- [[Sifat_Brak_Nazorati]] — sifat agenti jarayoni
-- [[CEO_Yordamchisi]] — umumiy hisobotlar
+- [[Ishlab_Chiqarish_Agent]] — bosh agent
+- [[Ishlab_Chiqarish_Departamenti]] — umumiy dashboard
+- [[Ekstruziya_Liniya]] — uskuna monitoring
+- [[Sifat_Brak_Nazorati]] — sifat hisoboti
+- [[Taminot_Agent]] — xom-ashyo so'rovi

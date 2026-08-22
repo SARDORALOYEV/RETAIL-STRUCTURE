@@ -1,59 +1,43 @@
 ---
-aliases: [Xomashyo_Tayyorlov, Xomashyo_Agenti]
-tags: [retail-it, production, xomashyo]
+aliases: [Xomashyo_Tayyorlov, Xomashyo_Tayyorlov_Agenti]
+tags: [retail-it, production, xomashyo, makkajoxori]
 created: 2026-08-22
 status: active
-parent: [[Sardor_General_Overview]]
+parent: [[Ishlab_Chiqarish_Agent]]
 ---
 
-# 🌾 Xom-ashyo Tayyorlov — Qabul va Tayyorlash
+# 🌽 Xom-ashyo Tayyorlov Agenti
 
-## Input Manbalari
+## 📋 Vazifasi
 
-| Manba | Ma'lumot turi |
-|-------|---------------|
-| [[Kamron_HR_Logistika_Taminot]] | Xom-ashyo yetkazish, transport |
-| [[Plan_Fakt]] | Kunlik smena rejasidagi hajm |
+- Kelib tushgan makkajo'xori donini turi va sifat sinfi bo'yicha saralash (yirik, mayda, aralash)
+- Don namligini o'lchash — ekstruziya uchun standart 12–14% namlik darajasiga yetkazish
+- Namligi yuqori donni quritish liniyasida qayta ishlash
+- Yot aralashmalar (somon, tosh, chirigan don) va zararkunanda izlarini avtomatik tozalash
+- Har partiyaning namlik, tozalik va sifat ko'rsatkichlarini jurnalga qayd etish
+- Tayyorlangan donni Ekstruziya liniyasiga uzluksiz uzatilishini ta'minlash
 
-## Jarayon
+## 🔄 Tizim Zanjiri (Workflow)
 
-```mermaid
-flowchart LR
-    KAMRON[Kamron: Logistika] -->|Xom-ashyo yetkazish| XT[Xom-ashyo Tayyorlov]
-    PF[Plan-Fakt] -->|Hajm rejasini| XT
-    XT -->|Jo'xori yormasi qabuli| QABUL[Qabul jarayoni]
-    QABUL -->|Yog' qabuli| NAMLIK[Namlik o'lchash]
-    NAMLIK -->|Ziravorlar qabuli| TAYYOR[Tayyor xom-ashyo]
-    TAYYOR --> EL[Ekstruziya Liniya]
-```
+1. [[Taminot_Agent]] dan makkajo'xori doni partiyasi va uning sertifikati keladi.
+2. [[Plan_Fakt]] dan kunlik kerakli xom-ashyo hajmi bo'yicha topshiriq olinadi.
+3. Don saralash, tozalash va namlik o'lchash amalga oshiriladi; namlik normadan yuqori bo'lsa quritish liniyasiga yo'naltiriladi.
+4. Tayyor xom-ashyo miqdori va sifat ko'rsatkichlari qayd etiladi.
+5. Tayyorlangan don [[Ekstruziya_Liniya]] ga uzatiladi.
+6. Rad etilgan (sifatsiz) partiya haqida [[Taminot_Agent]] ga xabar yuboriladi.
 
-1. **Jo'xori yormasi qabuli**: Yuk tashish va omborga joylashtirish
-2. **Yog' qabuli**: Sifat tekshiruvi, namlik o'lchash
-3. **Ziravorlar qabuli**: Tur, sifat va miqdor tekshiruvi
-4. **Namlik o'lchash**: Har bir xom-ashyo uchun namlik darajasi
+## 📊 ERP va Ma'lumotlar Almashinuvi
 
-## Xom-ashyo Turlari
+| Kiruvchi ma'lumot | Manba | Chiquvchi ma'lumot | Qabul qiluvchi |
+|---|---|---|---|
+| Don partiyasi: 12 tonna, namlik 16%, sertifikat №4021 | [[Taminot_Agent]] | Tayyor xom-ashyo: 11.4 tonna, namlik 13% | [[Ekstruziya_Liniya]] |
+| Kunlik kerakli hajm: 10 tonna | [[Plan_Fakt]] | Rad etilgan partiya akti: 0.6 tonna (zararkunanda izi) | [[Taminot_Agent]] |
+| — | — | Xom-ashyo tayyorlash hisoboti (namlik, tozalik) | [[Sifat_Brak_Nazorati]] |
 
-| Xom-ashyo | Manba | Namlik normasi |
-|-----------|-------|----------------|
-| Jo'xori yormasi | [[Kamron_HR_Logistika_Taminot]] | ≤ 14% |
-| Yog' | [[Kamron_HR_Logistika_Taminot]] | ≤ 0.5% |
-| Ziravorlar | [[Kamron_HR_Logistika_Taminot]] | ≤ 10% |
+## 🔗 Bog'liq Agentlar
 
-## Vazifalar
-
-- [ ] Xom-ashyo qabul protsedurasini bajarish
-- [ ] Namlik o'lchash natijalarini yozish
-- [ ] Sifat darajasini baholash
-- [ ] Xom-ashyo saqlash joyini belgilash
-
-## Output
-
-→ [[Ekstruziya_Liniya]] — tayyor xom-ashyo ekstruziya liniyasiga uzatiladi
-
-## Keyinchalik Bog'liqlar
-
-- [[Sardor_General_Overview]] — umumiy dashboard
-- [[Kamron_HR_Logistika_Taminot]] — xom-ashyo yetkazish
-- [[Plan_Fakt]] — smena rejasidagi hajm
-- [[Ekstruziya_Liniya]] — keyingi qadam
+- [[Ishlab_Chiqarish_Agent]] — bosh agent
+- [[Ishlab_Chiqarish_Departamenti]] — umumiy dashboard
+- [[Plan_Fakt]] — reja manbai
+- [[Ekstruziya_Liniya]] — keyingi jarayon
+- [[Taminot_Agent]] — xom-ashyo yetkazuvchi

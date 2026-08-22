@@ -1,21 +1,21 @@
 ---
 aliases: [Sotuv_Departamenti, Sales_Department, Sotuv]
-tags: [retail-it, department, sales, index]
+tags: [retail-it, department, sales, index, makkajoxori]
 created: 2026-08-22
 status: active
 ---
 
-# 🛒 Sotuv Departamenti (Sales)
+# 🛒 Sotuv Departamenti (Makkajo'xori Zavodi)
 
 **Rahbar:** Sardor
-**Roli:** Sotuv jarayoni — leadlar, zakazlar, qarzdorlik, torgoviy agentlar
+**Roli:** Makkajo'xori tayoqchalari, konservalangan kukuruz va ziravorli kukuruz mahsulotlarini supermarket, ulgurji bozor va distribyutorlarga sotish
 
 ## Departament Agentlari
 
 | Agent | Fayl | vazifa |
 |-------|------|--------|
-| Sotuv Agent | [[Sotuv_Agent]] | Sotuv jarayonini boshqarish |
-| Sales Bot Router | [[Sales_Bot_Router]] | 6 ta bot router |
+| Sotuv Agent | [[Sotuv_Agent]] | Sotuv jarayonini boshqarish — mijozlar, buyurtmalar, qarzdorlik |
+| Sales Bot Router | [[Sales_Bot_Router]] | 6 ta bot router — @zavod_sotuv_bot |
 
 ## Bo'limlar
 
@@ -32,8 +32,8 @@ status: active
 
 | Manba | Ma'lumot |
 |-------|----------|
-| [[Marketing_Agent]] | Leadlar ro'yxati |
-| [[Sklad_Agent]] | Mahsulot mavjudligi |
+| [[Marketing_Agent]] | Supermarket va distribyutor leadlari |
+| [[Sklad_Agent]] | Tayyor mahsulot (tayoqcha, konserva, ziravorli kukuruz) mavjudligi |
 | [[Yuridik_Agent]] | Shartnoma shablonlari |
 | [[Buxgalteriya_Agent]] | Narxlar ro'yxati |
 
@@ -51,15 +51,13 @@ status: active
 
 | Holat | Harakat | Mas'ul |
 |-------|---------|--------|
-| Sotuv 30% dan kam | [[Marketing_Agent]] ga shoshilinch reklama | Sotuv |
-| Qarzdorlik 50 kun | [[Yuridik_Agent]] ga yuridik chora | Sotuv |
-| 100% zakaz bajarilmasa | [[COO_Agent]] ga xabar | COO |
-| Yangi bozor | [[Export_Agent]] ga taklif | Sotuv |
+| Haftalik sotuv rejadan 30% kam | [[Marketing_Agent]] ga shoshilinch reklama so'rovi | Sotuv |
+| Qarzdorlik 50 kundan oshsa | [[Yuridik_Agent]] ga yuridik chora ko'rish | Sotuv |
+| Buyurtma 100% bajarilmasa (mahsulot yetishmasa) | [[COO_Agent]] ga xabar | COO |
 
 ## Bog'liqliklar
 
 - [[Ishlab_Chiqarish_Departamenti]] — mahsulot ishlab chiqarish
-- [[Moliya_Departamenti]] — KPI va moliya
 - [[Analitika_Departamenti]] — sotuv KPI
 - [[Sklad_Departamenti]] — ombor mavjudligi
 - [[Marketing_Departamenti]] — leadlar

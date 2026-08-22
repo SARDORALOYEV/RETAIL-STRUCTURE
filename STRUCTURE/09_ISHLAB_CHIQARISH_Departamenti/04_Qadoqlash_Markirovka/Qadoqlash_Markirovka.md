@@ -1,58 +1,43 @@
 ---
 aliases: [Qadoqlash_Markirovka, Qadoqlash_Agenti]
-tags: [retail-it, production, qadoqlash]
+tags: [retail-it, production, qadoqlash, ziravorlash, makkajoxori]
 created: 2026-08-22
 status: active
-parent: [[Sardor_General_Overview]]
+parent: [[Ishlab_Chiqarish_Agent]]
 ---
 
-# 📦 Qadoqlash va Markirovka
+# 📦 Qadoqlash va Markirovka Agenti
 
-## Input Manbalari
+## 📋 Vazifasi
 
-| Manba | Ma'lumot turi |
-|-------|---------------|
-| [[Ekstruziya_Liniya]] | Tayyor mahsulot (shishgan holda) |
+- Xom mahsulotni ziravorlash liniyasida yog'lash va ta'm beruvchi aralashmalarni (pishloqli, tuzli, shirin, barbekyu) qo'shish
+- Ziravor va yog' sarfini retseptga muvofiq nazorat qilish (haddan tashqari yoki kam sarflanmasligi)
+- Avtomatik qadoqlash apparatlarida mahsulotni og'irligi bo'yicha (30g, 70g, 150g) paketlash
+- Har bir qadoqqa shtrix-kod, seriya raqami va yaroqlilik muddatini (6 oy) avtomatik bosib chiqarish
+- Qutilarga joylash va paletlashni ombor talabiga moslab tashkil qilish
+- Qadoqlash liniyasidagi tezlik va uzilishlarni kuzatib borish
 
-## Jarayon
+## 🔄 Tizim Zanjiri (Workflow)
 
-```mermaid
-flowchart LR
-    EL[Ekstruziya Liniya] -->|Tayyor mahsulot| QM[Qadoqlash]
-    QM -->|Paketlash| PAKET[Paketlash stansiya]
-    PAKET -->|Havo yostig'i| YOSTIQ[Havo yostig'i]
-    YOSTIQ -->|Shtrixkod| MARKIROVKA[Markirovka]
-    MARKIROVKA -->|Tayyor| ABDUVORIS[Abduvoris: Sklad]
-```
+1. [[Ekstruziya_Liniya]] dan xom (ziravorlanmagan) mahsulot keladi.
+2. Mahsulot turiga qarab (pishloqli, tuzli, shirin, barbekyu) tegishli ziravor va yog' aralashmasi qo'shiladi.
+3. Ziravorlangan mahsulot avtomatik apparatda o'lchov bo'yicha paketlanadi.
+4. Har qadoqqa shtrix-kod, seriya raqami va yaroqlilik muddati bosiladi.
+5. Qadoqlangan mahsulot qutilarga joylanib, [[Sifat_Brak_Nazorati]] ga yakuniy tekshiruvga yuboriladi.
+6. Tasdiqlangan partiya [[Sklad_Agent]] ga topshiriladi.
 
-1. **Paketlash**: Mahsulot tegishli o'lchamdagi paketga joylashtiriladi
-2. **Havo yostig'i**: Paket ichiga havo yostig'i qo'yiladi (sinishdan himoya)
-3. **Shtrixkodlash**: Har bir paketga shtrixkod yaratiladi va bosiladi
-4. **Markirovka**: Sana, partiya raqami, og'irlik ko'rsatiladi
+## 📊 ERP va Ma'lumotlar Almashinuvi
 
-## Qadoqlash Standartlari
+| Kiruvchi ma'lumot | Manba | Chiquvchi ma'lumot | Qabul qiluvchi |
+|---|---|---|---|
+| Xom mahsulot: 10.8 tonna tayoqcha | [[Ekstruziya_Liniya]] | Qadoqlangan mahsulot: 36 000 dona (300g pishloqli) | [[Sifat_Brak_Nazorati]] |
+| Retsept: pishloqli 8%, tuzli 5%, barbekyu 7% yog'-ziravor | Ishlab chiqarish standarti | Shtrix-kod va seriya raqami ro'yxati | [[Sklad_Agent]] |
+| — | — | Qadoqlash liniyasi tezligi hisoboti | [[Ishlab_Chiqarish_Agent]] |
 
-| Mahsulot turi | Paket hajmi | Havo yostig'i | Shtrixkod |
-|---------------|-------------|---------------|-----------|
-| Standart | 50×30×25 cm | Ha | GS1-128 |
-| Premium | 40×25×20 cm | Ha | GS1-128 |
-| Optsiya | 60×40×30 cm | Ha | GS1-128 |
+## 🔗 Bog'liq Agentlar
 
-## Vazifalar
-
-- [ ] Mahsulotni paketlash
-- [ ] Havo yostig'ini joylashtirish
-- [ ] Shtrixkod yaratish va bosish
-- [ ] Markirovka ma'lumotlarini tekshirish
-- [ ] Tayyor paketlarni tayyorlash
-
-## Output
-
-→ [[Abduvoris_Sklad_Marketing]] — markaziy omborga topshiriladi
-
-## Keyinchalik Bog'liqlar
-
-- [[Sardor_General_Overview]] — umumiy dashboard
-- [[Ekstruziya_Liniya]] — mahsulot manbai
-- [[Abduvoris_Sklad_Marketing]] — omborga topshirish
-- [[Sifat_Brak_Nazorati]] — sifat nazorati
+- [[Ishlab_Chiqarish_Agent]] — bosh agent
+- [[Ishlab_Chiqarish_Departamenti]] — umumiy dashboard
+- [[Ekstruziya_Liniya]] — xom mahsulot manbai
+- [[Sifat_Brak_Nazorati]] — yakuniy tekshiruv
+- [[Sklad_Agent]] — tayyor mahsulot qabuli

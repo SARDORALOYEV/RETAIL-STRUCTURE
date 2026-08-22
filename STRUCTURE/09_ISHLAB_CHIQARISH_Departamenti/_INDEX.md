@@ -1,21 +1,21 @@
 ---
 aliases: [Ishlab_Chiqarish_Departamenti, Production_Department, Ishlab_Chiqarish]
-tags: [retail-it, department, production, index]
+tags: [retail-it, department, production, index, makkajoxori]
 created: 2026-08-22
 status: active
 ---
 
-# 🏭 Ishlab Chiqarish Departamenti (Production)
+# 🏭 Ishlab Chiqarish Departamenti (Makkajo'xori Zavodi)
 
 **Rahbar:** Sardor
-**Roli:** Mahsulot ishlab chiqarish — zavod, liniyalar, sifat nazorati
+**Roli:** Makkajo'xori tayoqchalari, konservalangan kukuruz va ziravorli kukuruz mahsulotlarini ishlab chiqarish — xomashyodan tayyor mahsulotgacha to'liq nazorat
 
 ## Departament Agentlari
 
 | Agent | Fayl | vazifa |
 |-------|------|--------|
-| Ishlab Chiqarish Agent | [[Ishlab_Chiqarish_Agent]] | Zavod jarayonini boshqarish |
-| Sifat Nazorati Agent | [[Sifat_Nazorati_Agent]] | Sifat va brak nazorati |
+| Ishlab Chiqarish Agent | [[Ishlab_Chiqarish_Agent]] | Zavod jarayonini boshqarish — reja, xomashyo, liniya, sifat |
+| Sifat Nazorati Agent | [[Sifat_Nazorati_Agent]] | Har smenadagi brak foizini nazorat qilish |
 
 ## Bo'limlar
 
@@ -32,33 +32,31 @@ status: active
 
 | Manba | Ma'lumot |
 |-------|----------|
-| [[Taminot_Agent]] | Xom-ashyo yetkazish |
-| [[Sklad_Agent]] | Ombor qoldig'i va talab |
+| [[Taminot_Agent]] | Makkajo'xori doni, ziravorlar, qadoqlash materiali |
+| [[Sklad_Agent]] | Ombor qoldig'i va talab prognozi |
 | [[Moliya_Agent]] | Ishlab chiqarish budjeti |
-| [[HR_Agent]] | Ishchi kuchi ro'yxati |
+| [[HR_Agent]] | Smena ishchi kuchi ro'yxati |
 
 ## Chiqish (outputs_to)
 
 | Qabul qiluvchi | Ma'lumot |
 |----------------|----------|
-| [[Sklad_Agent]] | Tayyor mahsulot |
-| [[Sifat_Nazorati_Agent]] | Namuna va sifat ma'lumotlari |
+| [[Sklad_Agent]] | Tayyor mahsulot (tayoqcha, konserva, ziravorli kukuruz) |
 | [[Buxgalteriya_Agent]] | Tannarx hisoboti |
-| [[Analitika_Agent]] | Ishlab chiqarish KPI |
+| [[Analitika_Agent]] | Ishlab chiqarish KPI, brak foizi |
 
 ## Cascade Rules
 
 | Holat | Harakat | Mas'ul |
 |-------|---------|--------|
-| Xom-ashyo yetishmasligi | [[Taminot_Agent]] ga shoshilinch buyurtma | Ishlab Chiqarish |
-| Liniya to'xtashi | [[COO_Agent]] ga xabar | COO |
-| Brak > 5% | [[Sifat_Nazorati_Agent]] to'liq tekshiruv | Sifat |
-| Budjet +10% | [[Moliya_Agent]] ga hisobot | Moliya |
+| Xom-ashyo namligi normadan yuqori | [[Xomashyo_Tayyorlov]] qayta quritish, [[Taminot_Agent]] ga xabar | Ishlab Chiqarish |
+| Ekstruder bosimi tushib ketsa | Liniyani to'xtatish, texnik xizmatga chaqirish | Ishlab Chiqarish |
+| Brak foizi 5% dan oshsa | [[Sifat_Nazorati_Agent]] to'liq tekshiruv, [[COO_Agent]] ga xabar | Sifat |
 
 ## Bog'liqliklar
 
-- [[Sotuv_Departamenti]] — mahsulot sotish
-- [[Kamron_Moliya_Analitika]] — KPI va moliya
+- [[Sotuv_Departamenti]] — tayyor mahsulotni sotish
+- [[Analitika_Departamenti]] — ishlab chiqarish KPI
 - [[Abduvoris_Sklad_Marketing]] — ombor va marketing
 - [[Kamron_HR_Logistika_Taminot]] — xom-ashyo va HR
 - [[Abdulloh_Legal_Buxgalteriya_TIF]] — tannarx va shartnomalar

@@ -1,98 +1,40 @@
 ---
 aliases: [Sardor, Sardor_General_Overview, Production_Sales]
-tags: [retail-it, sardor, production, sales, overview]
+tags: [retail-it, sardor, production, sales, overview, makkajoxori]
 created: 2026-08-22
 status: active
 ---
 
-# 🏭 Sardor — Ishlab chiqarish va Sotuv
+# 🌽 Sardor — Ishlab Chiqarish va Sotuv (Makkajo'xori Zavodi)
 
-## Umumiy Dashboard
+## 📋 Vazifasi
 
-Sardor tashkilotning **ishlab chiqarish** va **sotuv** yo'nalishlariga mas'ul. Ikkita katta tizimni boshqaradi:
+- Makkajo'xori zavodining ikkita asosiy yo'nalishini — Ishlab Chiqarish va Sotuv — yagona strategiya ostida boshqarish
+- Ishlab chiqarish hajmi va sotuv rejasini muvofiqlashtirish (ortiqcha yoki yetishmovchilik bo'lmasligi uchun)
+- Ikkala yo'nalish o'rtasidagi ma'lumot almashinuvini (buyurtma → ishlab chiqarish rejasi, tayyor mahsulot → sotuv) nazorat qilish
+- Haftalik umumiy operatsion hisobotni [[CEO_Yordamchisi]] orqali CEO'ga taqdim etish
+- Ishlab chiqarish va sotuv o'rtasidagi uzilishlarni (kechikish, yetishmovchilik) oldindan aniqlash
 
-1. **Ishlab chiqarish (Production)** — 6 ta agent orqali
-2. **Sotuv (Sales)** — 6 ta bot router orqali
+## 🔄 Tizim Zanjiri (Workflow)
 
-## Tizim Tuzilishi
+1. [[Sotuv_Agent]] supermarketlar va distribyutorlardan kelgan buyurtmalarni yig'adi.
+2. Buyurtma hajmi [[Ishlab_Chiqarish_Agent]] ga uzatiladi va u asosida haftalik ishlab chiqarish rejasi tuziladi.
+3. [[Ishlab_Chiqarish_Agent]] mahsulotni ishlab chiqarib, [[Sklad_Agent]] ga topshiradi.
+4. Ombor qoldig'i haqida ma'lumot qaytadan [[Sotuv_Agent]] ga boradi — savdo jamoasi mavjud mahsulotni sotishni davom ettiradi.
+5. Har ikkala yo'nalishning KPI'lari [[Analitika_Agent]] orqali yig'ilib, umumiy hisobot [[CEO_Yordamchisi]] ga yuboriladi.
 
-```mermaid
-graph TD
-    SARDOR[🏭 Sardor - Ishlab chiqarish va Sotuv]
+## 📊 ERP va Ma'lumotlar Almashinuvi
 
-    %% Ishlab chiqarish
-    SARDOR --> PROD[01_Ishlab_Chiqarish]
-    PROD --> PF[01_Plan_Fakt]
-    PROD --> XT[02_Xomashyo_Tayyorlov]
-    PROD --> EL[03_Ekstruziya_Liniya]
-    PROD --> QM[04_Qadoqlash_Markirovka]
-    PROD --> SBN[05_Sifat_Brak_Nazorati]
-    PROD --> PBA[06_Production_Bot_Agents]
+| Kiruvchi ma'lumot | Manba | Chiquvchi ma'lumot | Qabul qiluvchi |
+|---|---|---|---|
+| Buyurtmalar hajmi | [[Sotuv_Agent]] | Ishlab chiqarish rejasi | [[Ishlab_Chiqarish_Agent]] |
+| Ombor qoldig'i | [[Sklad_Agent]] | Mahsulot mavjudligi | [[Sotuv_Agent]] |
+| KPI va moliyaviy hisobot | [[Analitika_Agent]], [[Moliya_Agent]] | Umumiy operatsion hisobot | [[CEO_Yordamchisi]] |
 
-    %% Sotuv
-    SARDOR --> SALES[02_Sotuv]
-    SALES --> LBC[01_Lead_Baza_CRM]
-    SALES --> TAR[02_Torgoviy_Agent_Route]
-    SALES --> KPS[03_KP_Shartnomalar]
-    SALES --> ZK[04_Zakaz_Kassa]
-    SALES --> QC[05_Qarzdorlik_CRM]
-    SALES --> SBR[06_Sales_Bot_Router]
+## 🔗 Bog'liq Agentlar
 
-    %% Agentlar
-    PBA --> A1[Plan-fakt agenti]
-    PBA --> A2[Xom-ashyo agenti]
-    PBA --> A3[Liniya agenti]
-    PBA --> A4[Qadoqlash agenti]
-    PBA --> A5[Brak & Sifat agenti]
-    PBA --> A6[Tannarx & Hisobot agenti]
-
-    %% Bot Router
-    SBR --> B1[CRM & Lead bot]
-    SBR --> B2[Torgoviy Agent bot]
-    SBR --> B3[KP & Shartnoma bot]
-    SBR --> B4[Zakaz & Kassa bot]
-    SBR --> B5[Qarzdorlik bot]
-    SBR --> B6[Analitika & KPI bot]
-```
-
-## Hamkorlik Bog'liqliklari
-
-| Bo'lim | Qanday bog'langan | Qo'shimcha |
-|--------|-------------------|------------|
-| [[Abduvoris_Sklad_Marketing]] | Ombordagi qoldiq va leadlar | Marketing kampaniyalari |
-| [[Kamron_HR_Logistika_Taminot]] | Xom-ashyo yetkazish va transport | HR — ishchi kuchi |
-| [[Abdulloh_Legal_Buxgalteriya_TIF]] | Tannarx, shartnoma va eksport | Yuridik maslahat |
-| [[Komron_Moliya_Analitika]] | KPI va sotuv dashboard | Moliyaviy hisobotlar |
-
-## Ishlab chiqarish Oqimi
-
-```mermaid
-flowchart LR
-    KAMRON[Komron: Moliya] -->|Budget| PF[Plan-Fakt]
-    ABDUVORIS[Abduvoris: Sklad] -->|Qoldiq| PF[Plan-Fakt]
-    PF -->|Reja| XT[Xom-ashyo]
-    KAMRON_HR[Kamron: Logistika] -->|Xom-ashyo| XT
-    XT -->|Tayyor| EL[Ekstruziya]
-    EL -->|Tayyor mahsulot| QM[Qadoqlash]
-    QM -->|Paketlangan| ABDUVORIS
-    SBN -->|Brak akti| ABDULLOH[Abdulloh: Legal]
-    SBN -->|Hisobot| CEO_YORDAMCHI[CEO Yordamchisi]
-```
-
-## Sotuv Oqimi
-
-```mermaid
-flowchart LR
-    ABDUVORIS[Abduvoris: Marketing] -->|Leadlar| LBC[Lead Baza CRM]
-    LBC -->|Lead| TAR[Torgoviy Agent]
-    TAR -->|Taklif| KPS[KP & Shartnoma]
-    KPS -->|Shartnoma| ZK[Zakaz & Kassa]
-    ZK -->|Sotuv| QC[Qarzdorlik]
-    QC -->|To'lov| KOMRON[Komron: Moliya]
-```
-
-## Keyinchalik Bog'liqlar
-
+- [[Ishlab_Chiqarish_Departamenti]] — ishlab chiqarish yo'nalishi
+- [[Sotuv_Departamenti]] — sotuv yo'nalishi
 - [[CEO_Yordamchisi]] — topshiriqlar va hisobotlar
 - [[Abduvoris_Sklad_Marketing]] — ombor va leadlar
 - [[Kamron_HR_Logistika_Taminot]] — xom-ashyo va transport

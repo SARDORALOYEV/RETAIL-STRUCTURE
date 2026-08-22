@@ -1,49 +1,42 @@
 ---
 aliases: [Plan_Fakt, Plan_Fakt_Agenti]
-tags: [retail-it, production, plan-fakt]
+tags: [retail-it, production, plan-fakt, makkajoxori]
 created: 2026-08-22
 status: active
-parent: [[Sardor_General_Overview]]
+parent: [[Ishlab_Chiqarish_Agent]]
 ---
 
 # 📊 Plan-Fakt — Kunlik Smena va Hajm Rejasi
 
-## Input Manbalari
+## 📋 Vazifasi
 
-| Manba | Ma'lumot turi |
-|-------|---------------|
-| [[Komron_Moliya_Analitika]] | Moliyaviy reja, budjet limitlari |
-| [[Abduvoris_Sklad_Marketing]] | Ombordagi qoldiq, talab prognozi |
+- Sotuv buyurtmalari va ombor qoldig'i asosida kunlik/haftalik ishlab chiqarish hajmini (tonna, turlar bo'yicha) rejalashtirish
+- Har smena uchun qaysi mahsulot (klassik tayoqcha, pishloqli, barbekyu, konservalangan kukuruz) ishlab chiqarilishini belgilash
+- Rejalashtirilgan va real bajarilgan hajmni (Plan vs Fakt) kunlik solishtirish
+- Liniyalar orasida navbatni (qaysi mahsulot birinchi ishlab chiqarilishi) optimallashtirish
+- Reja bajarilmasa sababini aniqlash (xom-ashyo yetishmasligi, uskuna nosozligi, ishchi kuchi kamligi) va tegishli agentga signal berish
 
-## Jarayon
+## 🔄 Tizim Zanjiri (Workflow)
 
-```mermaid
-flowchart LR
-    KOMRON[Komron: Moliya] -->|Reja va budjet| PF[Plan-Fakt Agenti]
-    ABDUVORIS[Abduvoris: Sklad] -->|Qoldiq va talab| PF
-    PF -->|Kunlik smena rejasini shakllantirish| SMENA[Smena rejasi]
-    SMENA -->|Hajm va navbat| XT[Xomashyo Tayyorlov]
-```
+1. [[Sotuv_Agent]] dan buyurtmalar hajmi va turlari haqida ma'lumot keladi.
+2. [[Sklad_Agent]] dan omordagi tayyor mahsulot qoldig'i olinadi.
+3. [[Moliya_Agent]] dan oylik ishlab chiqarish budjeti tasdiqlanadi.
+4. Ushbu ma'lumotlar asosida kunlik smena rejasi va mahsulot turlari bo'yicha navbat shakllantiriladi.
+5. Reja [[Xomashyo_Tayyorlov]] ga (qancha xom-ashyo tayyorlanishi kerakligini bildirish uchun) uzatiladi.
+6. Smena yakunida real bajarilgan hajm reja bilan solishtiriladi va farq [[Ishlab_Chiqarish_Agent]] ga hisobot qilinadi.
 
-1. **Reja olish**: [[Komron_Moliya_Analitika]] dan oylik/yillik reja olinadi
-2. **Qoldiq tekshirish**: [[Abduvoris_Sklad_Marketing]] dan ombordagi qoldiq olinadi
-3. **Smena rejasini shakllantirish**: Kunlik ishlab chiqarish hajmi belgilanadi
-4. **Navbat belgilash**: Qaysi mahsulot avval ishlab chiqariladi
+## 📊 ERP va Ma'lumotlar Almashinuvi
 
-## Vazifalar
+| Kiruvchi ma'lumot | Manba | Chiquvchi ma'lumot | Qabul qiluvchi |
+|---|---|---|---|
+| Buyurtmalar hajmi va turlari | [[Sotuv_Agent]] | Kunlik smena rejasi | [[Xomashyo_Tayyorlov]] |
+| Tayyor mahsulot qoldig'i | [[Sklad_Agent]] | Mahsulot turlari bo'yicha navbat | [[Ekstruziya_Liniya]] |
+| Ishlab chiqarish budjeti | [[Moliya_Agent]] | Plan vs Fakt hisoboti | [[Ishlab_Chiqarish_Agent]] |
 
-- [ ] Kunlik smena rejasini yaratish
-- [ ] Hajm rejasini hisoblash
-- [ ] Navbatni optimallashtirish
-- [ ] Plan vs Fakt taqqoslash
+## 🔗 Bog'liq Agentlar
 
-## Output
-
-→ [[Xomashyo_Tayyorlov]] — tayyor reja asosida xom-ashyo tayyorlash boshlanadi
-
-## Keyinchalik Bog'liqlar
-
-- [[Sardor_General_Overview]] — umumiy dashboard
-- [[Komron_Moliya_Analitika]] — moliyaviy ma'lumotlar
-- [[Abduvoris_Sklad_Marketing]] — ombor ma'lumotlari
-- [[Xomashyo_Tayyorlov]] — keyingi qadam
+- [[Ishlab_Chiqarish_Agent]] — bosh agent
+- [[Ishlab_Chiqarish_Departamenti]] — umumiy dashboard
+- [[Xomashyo_Tayyorlov]] — keyingi jarayon
+- [[Sotuv_Agent]] — buyurtma manbai
+- [[Sklad_Agent]] — qoldiq manbai

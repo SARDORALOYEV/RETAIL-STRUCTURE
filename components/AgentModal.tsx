@@ -163,37 +163,55 @@ export default function AgentModal({
                 />
               </Block>
 
-              {fields.workflow.length > 0 && (
+              {(fields.workflowText || fields.workflow.length > 0) && (
                 <Block icon={Workflow} label="Tizim Zanjiri (Workflow)">
-                  <WorkflowFlow edges={fields.workflow} tone={cn(palette.bg, palette.text)} />
+                  {fields.workflowText ? (
+                    <Markdown
+                      content={fields.workflowText}
+                      accentText={palette.text}
+                      docsIndex={docsIndex}
+                      onNavigate={onNavigate}
+                    />
+                  ) : (
+                    <WorkflowFlow edges={fields.workflow} tone={cn(palette.bg, palette.text)} />
+                  )}
                 </Block>
               )}
 
               <Block icon={ArrowLeftRight} label="ERP Ma'lumotlar Almashinuvi">
-                <div className="space-y-3">
-                  <div>
-                    <div className="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase mb-1">
-                      Kiruvchi
+                {fields.erpTable ? (
+                  <Markdown
+                    content={fields.erpTable}
+                    accentText={palette.text}
+                    docsIndex={docsIndex}
+                    onNavigate={onNavigate}
+                  />
+                ) : (
+                  <div className="space-y-3">
+                    <div>
+                      <div className="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase mb-1">
+                        Kiruvchi
+                      </div>
+                      <LinkBadges
+                        items={fields.erpInputs}
+                        tone={SEMANTIC.success}
+                        docsIndex={docsIndex}
+                        onNavigate={onNavigate}
+                      />
                     </div>
-                    <LinkBadges
-                      items={fields.erpInputs}
-                      tone={SEMANTIC.success}
-                      docsIndex={docsIndex}
-                      onNavigate={onNavigate}
-                    />
-                  </div>
-                  <div>
-                    <div className="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase mb-1">
-                      Chiquvchi
+                    <div>
+                      <div className="text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase mb-1">
+                        Chiquvchi
+                      </div>
+                      <LinkBadges
+                        items={fields.erpOutputs}
+                        tone="bg-sky-50 text-sky-700 dark:bg-sky-500/10 dark:text-sky-400"
+                        docsIndex={docsIndex}
+                        onNavigate={onNavigate}
+                      />
                     </div>
-                    <LinkBadges
-                      items={fields.erpOutputs}
-                      tone="bg-sky-50 text-sky-700 dark:bg-sky-500/10 dark:text-sky-400"
-                      docsIndex={docsIndex}
-                      onNavigate={onNavigate}
-                    />
                   </div>
-                </div>
+                )}
               </Block>
 
               <Block icon={Link2} label="Bog'liq Agentlar">

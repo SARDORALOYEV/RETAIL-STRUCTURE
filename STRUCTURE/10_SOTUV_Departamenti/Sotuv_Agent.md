@@ -1,9 +1,9 @@
 ---
-aliases: [Sotuv_Agent, Sales_Agent, Sotuv]
-tags: [retail-it, sales, erp, agent]
+aliases: [Sotuv_Agent, Sales_Agent]
+tags: [retail-it, sotuv, erp, agent, makkajoxori]
 created: 2026-08-22
 status: active
-role: Sotuv jarayoni — leadlar, zakazlar, qarzdorlik, torgoviy agentlar
+role: Makkajo'xori zavodi mahsulotlarini supermarket, ulgurji bozor va distribyutorlarga sotish jarayonini boshqaruvchi bosh agent
 inputs_from:
   - [[Marketing_Agent]]
   - [[Sklad_Agent]]
@@ -14,68 +14,46 @@ outputs_to:
   - [[Buxgalteriya_Agent]]
   - [[Moliya_Agent]]
   - [[Analitika_Agent]]
-  - [[Export_Agent]]
-cascade_rules:
-  trigger: Sotuv 30% dan kam yoki qarzdorlik oshishi
-  action:
-    - Sotuv 30% dan kam → [[Marketing_Agent]] ga shoshilinch reklama
-    - Qarzdorlik 50 kun o'tsa → [[Yuridik_Agent]] ga yuridik chora
-    - Zakaz 100% bajarilmasa → [[COO_Agent]] ga xabar
-  escalate_to: [[COO_Agent]]
-parent: [[Sardor_General_Overview]]
+parent: [[Sotuv_Departamenti]]
 ---
 
 # 🛒 Sotuv Agent
 
-## ERP输入 (inputs_from)
+## 📋 Vazifasi
 
-| Manba | Ma'lumot turi | chastotasi |
-|-------|---------------|------------|
-| [[Marketing_Agent]] | Leadlar ro'yxati | Kunlik |
-| [[Sklad_Agent]] | Mahsulot mavjudligi | Real vaqt |
-| [[Yuridik_Agent]] | Shartnoma shablonlari | Kerak bo'lganda |
-| [[Buxgalteriya_Agent]] | Narxlar ro'yxati | Oylik |
+- Supermarketlar (KORZINKA, MAKRO, HAVAS va h.k.), ulgurji bozorlar, distribyutorlar va dilerlar bazasini yuritish
+- Torgoviy agentlarning kunlik marshrutini va do'konlarga tashrif rejasini nazorat qilish
+- Tijorat takliflari (KP) va shartnomalarni tasdiqlashdan o'tkazish
+- Zakazlarni qabul qilib, ombor va kassa jarayoniga uzatish
+- Mijozlar qarzdorligini kuzatib, muddati o'tgan to'lovlar bo'yicha chora ko'rish
+- Haftalik sotuv hajmi va mahsulot turlari bo'yicha (tayoqcha, konserva, ziravorli kukuruz) hisobot tayyorlash
 
-## ERP输出 (outputs_to)
+## 🔄 Tizim Zanjiri (Workflow)
 
-| Qabul qiluvchi | Ma'lumot turi | chastotasi |
-|----------------|---------------|------------|
-| [[Sklad_Agent]] | Zakazlar — mahsulot chiqarish | Real vaqt |
-| [[Buxgalteriya_Agent]] | Sotuv hisoboti, qarzdorlik | Kunlik |
-| [[Moliya_Agent]] | Sotuv tushumi | Kunlik |
-| [[Analitika_Agent]] | Sotuv KPI | Haftalik |
-| [[Export_Agent]] | Xorijiy zakazlar | Kerak bo'lganda |
+1. [[Marketing_Agent]] dan yangi supermarket/distribyutor leadlari keladi, [[Lead_Baza_CRM_Agent]] ularni saralaydi.
+2. [[Torgoviy_Agent_Route_Agent]] savdo agentlarining do'konlarga tashrif marshrutini tuzadi.
+3. Do'kon buyurtma bersa, [[KP_Shartnomalar_Agent]] tijorat taklifi va shartnomani tayyorlaydi.
+4. Tasdiqlangan buyurtma [[Zakaz_Kassa_Agent]] orqali qabul qilinadi va [[Sklad_Agent]] ga mahsulot chiqarish uchun yuboriladi.
+5. To'lov muddati kelganda [[Qarzdorlik_CRM_Agent]] holatni kuzatadi, kechiksa mijozga eslatma yuboradi.
+6. Haftalik sotuv KPI [[Analitika_Agent]] ga, tushum esa [[Moliya_Agent]] ga yuboriladi.
 
-## Cascade Rules (Zanjirli Bog'liqliklar)
+## 📊 ERP va Ma'lumotlar Almashinuvi
 
-```mermaid
-flowchart TD
-    SOTUV_KAM[Sotuv 30% dan kam] -->|trigger| MARKETING[Marketing Agent]
-    MARKETING -->|shoshilinch reklama| SOTUV
-    QARZDORLIK[Qarzdorlik 50 kun] -->|trigger| LEGAL[Yuridik Agent]
-    LEGAL -->|yuridik chora| SOTUV
-    ZAKAZ[100% zakaz bajarilmasa] -->|trigger| COO[COO Agent]
-    SOTUV -->|zakaz| SKLAD[Sklad Agent]
-    SOTUV -->|to'lov| BUX[Buxgalteriya Agent]
-    SOTUV -->|tushum| MOLIYA[Moliya Agent]
-    MARKETING -->|leadlar| SOTUV
-```
+| Kiruvchi ma'lumot | Manba | Chiquvchi ma'lumot | Qabul qiluvchi |
+|---|---|---|---|
+| Yangi supermarket/distribyutor leadlari | [[Marketing_Agent]] | Zakazlar — mahsulot chiqarish so'rovi | [[Sklad_Agent]] |
+| Tayyor mahsulot qoldig'i | [[Sklad_Agent]] | Sotuv hisoboti, qarzdorlik | [[Buxgalteriya_Agent]] |
+| Shartnoma shablonlari | [[Yuridik_Agent]] | Haftalik sotuv tushumi | [[Moliya_Agent]] |
+| Narxlar ro'yxati | [[Buxgalteriya_Agent]] | Sotuv KPI (hajm, konversiya) | [[Analitika_Agent]] |
 
-| holat | Harakat | Mas'ul |
-|-------|---------|--------|
-| Sotuv 30% dan kam | [[Marketing_Agent]] ga shoshilinch reklama | Sotuv |
-| Qarzdorlik 50 kun o'tsa | [[Yuridik_Agent]] ga yuridik chora | Sotuv |
-| Zakaz 100% bajarilmasa | [[COO_Agent]] ga xabar | Sotuv |
-| Yangi bozor | [[Export_Agent]] ga taklif | Sotuv |
+## 🔗 Bog'liq Agentlar
 
-## Keyinchalik Bog'liqlar
-
-- [[Sardor_General_Overview]] — umumiy dashboard
-- [[Marketing_Agent]] — lead manbai
-- [[Sklad_Agent]] — mahsulot mavjudligi
-- [[Yuridik_Agent]] — shartnomalar
-- [[Buxgalteriya_Agent]] — hisob-kitob
-- [[Moliya_Agent]] — tushum nazorati
-- [[Analitika_Agent]] — sotuv KPI
-- [[Export_Agent]] — xorijiy sotuv
-- [[COO_Agent]] — operatsion boshqaruv
+- [[Sotuv_Departamenti]] — umumiy dashboard
+- [[Lead_Baza_CRM_Agent]] — mijoz manbai
+- [[Torgoviy_Agent_Route_Agent]] — marshrut
+- [[KP_Shartnomalar_Agent]] — hujjatlar
+- [[Zakaz_Kassa_Agent]] — buyurtma qabuli
+- [[Qarzdorlik_CRM_Agent]] — qarzdorlik nazorati
+- [[Sales_Bot_Router]] — bot tuzilishi
+- [[Sklad_Agent]] — mahsulot manbai
+- [[Ishlab_Chiqarish_Agent]] — mahsulot ishlab chiqaruvchi
