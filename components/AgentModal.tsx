@@ -122,6 +122,7 @@ export default function AgentModal({
             exit={{ opacity: 0, scale: 0.96, y: 8 }}
             transition={{ type: "spring", stiffness: 320, damping: 30 }}
             onClick={(e) => e.stopPropagation()}
+            data-lenis-prevent
             className="w-full max-w-2xl max-h-[88vh] overflow-y-auto no-scrollbar rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-xl"
           >
             <div className="sticky top-0 z-10 px-6 pt-6 pb-4 border-b border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-gray-900/95 backdrop-blur">

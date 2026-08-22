@@ -216,7 +216,10 @@ export default function SectionCard({
             transition={{ duration: 0.25, ease: "easeInOut" }}
             className="overflow-hidden border-t border-gray-100 dark:border-gray-800"
           >
-            <div className="px-3 py-2 divide-y divide-gray-100 dark:divide-gray-800/60 max-h-[420px] overflow-y-auto no-scrollbar">
+            <div
+              data-lenis-prevent
+              className="px-3 py-2 divide-y divide-gray-100 dark:divide-gray-800/60 max-h-[420px] overflow-y-auto no-scrollbar"
+            >
               {total === 0 && (
                 <p className="px-2 py-3 text-xs text-gray-400 dark:text-gray-500">Sub-agent topilmadi</p>
               )}
