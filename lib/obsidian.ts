@@ -102,13 +102,26 @@ function buildSection(dirPath: string, relDir: string): SectionNode {
     }
   }
 
+  // A folder-dropdown must hold at least 2 files to earn its own accordion.
+  // A leaf child folder with fewer than 2 docs (and no sub-folders of its
+  // own) gets unwrapped: its doc(s) are promoted straight into this parent.
+  const finalDocs = [...docs];
+  const finalChildren: SectionNode[] = [];
+  for (const child of children) {
+    if (child.docs.length < 2 && child.children.length === 0) {
+      finalDocs.push(...child.docs);
+    } else {
+      finalChildren.push(child);
+    }
+  }
+
   return {
     id: relDir.replace(/\\/g, "/"),
     folderName,
     displayName: cleanName(folderName),
     index,
-    docs,
-    children,
+    docs: finalDocs,
+    children: finalChildren,
   };
 }
 
