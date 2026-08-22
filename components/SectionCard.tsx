@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronRight, Bot, Folder, Info } from "lucide-react";
 import type { SectionNode, AgentDoc } from "@/lib/obsidian";
@@ -10,6 +10,11 @@ import { iconForDept } from "@/components/DeptIcon";
 import { cn, paletteFor } from "@/lib/utils";
 
 type SelectHandler = (doc: AgentDoc, sectionName: string, colorIndex: number) => void;
+
+export interface ExpandSignal {
+  action: "expand" | "collapse";
+  token: number;
+}
 
 function AgentRow({
   doc,
@@ -51,16 +56,23 @@ function NestedGroup({
   colorIndex,
   depth,
   onSelectAgent,
+  expandSignal,
 }: {
   node: SectionNode;
   sectionName: string;
   colorIndex: number;
   depth: number;
   onSelectAgent: SelectHandler;
+  expandSignal?: ExpandSignal | null;
 }) {
   const [open, setOpen] = useState(false);
   const total = countAgents(node);
   const palette = paletteFor(colorIndex);
+
+  useEffect(() => {
+    if (!expandSignal) return;
+    setOpen(expandSignal.action === "expand");
+  }, [expandSignal]);
 
   return (
     <div className="border-l border-gray-200 dark:border-gray-800" style={{ marginLeft: depth * 10 }}>
@@ -113,6 +125,7 @@ function NestedGroup({
                   colorIndex={colorIndex}
                   depth={depth + 1}
                   onSelectAgent={onSelectAgent}
+                  expandSignal={expandSignal}
                 />
               ))}
             </div>
@@ -129,6 +142,7 @@ interface Props {
   onSelectAgent: SelectHandler;
   index: number;
   defaultOpen?: boolean;
+  expandSignal?: ExpandSignal | null;
 }
 
 export default function SectionCard({
@@ -137,11 +151,17 @@ export default function SectionCard({
   onSelectAgent,
   index,
   defaultOpen = false,
+  expandSignal,
 }: Props) {
   const [open, setOpen] = useState(defaultOpen);
   const palette = paletteFor(colorIndex);
   const total = countAgents(section);
   const Icon = iconForDept(section.id);
+
+  useEffect(() => {
+    if (!expandSignal) return;
+    setOpen(expandSignal.action === "expand");
+  }, [expandSignal]);
 
   return (
     <motion.div
@@ -240,6 +260,7 @@ export default function SectionCard({
                   colorIndex={colorIndex}
                   depth={1}
                   onSelectAgent={onSelectAgent}
+                  expandSignal={expandSignal}
                 />
               ))}
             </div>
